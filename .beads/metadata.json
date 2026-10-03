@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "galicia",
+  "project_id": "8e1b33bc-4359-49a9-ae7f-fcffbda77ba9"
+}
