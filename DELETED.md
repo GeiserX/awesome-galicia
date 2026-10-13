@@ -8,6 +8,8 @@ Repos que fueron retirados de la lista porque fueron archivados, deprecados o ya
 
 ## Deprecados
 
+- [SERGASApp](https://github.com/mrego/sergasapp) - Aplicación no oficial de citas de atención primaria del SERGAS. Retirada a petición de su autor: dejó de funcionar y ya existe la aplicación oficial.
+
 ## No cumplen criterios
 
 - [BigSeqKit](https://github.com/citiususc/BigSeqKit) - Herramienta genérica de procesamiento paralelo de ficheros FASTA/FASTQ, no específica de Galicia.
