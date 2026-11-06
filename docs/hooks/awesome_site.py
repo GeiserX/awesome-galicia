@@ -42,7 +42,9 @@ NOT_CATEGORIES = {
     "Contenido", "Insignia", "Mantenedores", "Contribuir", "Nota", "Descargo de responsabilidad",
     "Contents", "Contributing", "Badge for listed projects", "License",
 }
-TOKEN = re.compile(r"<!--\s*n:([a-z]+)\s*-->")
+# Any name after n:, so a misspelt token (n:Proyectos, n:pro_yectos) fails as unknown
+# instead of staying an invisible comment where a count should be.
+TOKEN = re.compile(r"<!--\s*n:([^\s>]+?)\s*-->")
 IMG = re.compile(r"<img\b[^>]*>")
 LISTED = re.compile(r"<li>\s*<a href=\"https?://")
 
@@ -58,8 +60,9 @@ def counts() -> dict[str, int]:
             continue
         if section is None or section in NOT_CATEGORIES:
             continue  # the Contenido index and the Mantenedores profiles are not projects
-        cats.add(section)
-        n += bool(ENTRY.match(line))
+        if ENTRY.match(line):  # a section counts as a category only once it lists a project
+            cats.add(section)
+            n += 1
     return {
         "proyectos": n,
         "categorias": len(cats),
@@ -98,7 +101,7 @@ class Lazy(Postprocessor):
         if getattr(self.md, "awesome_list_page", False):
             self.md.awesome_list_page = False
             listed, expected = len(LISTED.findall(html)), counts()["proyectos"]
-            missing = [i for i in self.ids if f'id="{i}"' not in html]
+            missing = [i for i in self.ids if not re.search(rf'<h[1-6][^>]*\sid="{re.escape(i)}"', html)]
             if missing or listed < expected:
                 raise RuntimeError(
                     f"the list page shows {listed} of the README's {expected} projects and lacks "
